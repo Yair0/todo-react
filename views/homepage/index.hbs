@@ -1,0 +1,37 @@
+<main role="main" class="container">
+  <div class="row">
+    <div class="col-12">
+      <h1>TODO List</h1>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12">
+      <form class="form-inline" action="/tasks" method="POST">
+        <div class="input-group w-100">
+          <input id="task_description" type="text" name="description" placeholder="I have to..." class="form-control">
+          <div class="input-group-append">
+            <input type="button" value="Add" class="btn btn-primary" onclick="storeTask()">
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-lg-12" id="task_list">
+      {{#each tasks}}
+      <div class="card my-3" id={{id}}>
+        <div class="card-body">
+          <h3 class="card-title ">{{ description }}</h3>
+          <p class="card-text">
+            <!-- <input id="{{id}}-done" type="button" value="pending" class="btn btn-info" onclick="completeTask({{id}})" /> -->
+            {{#eq status "pending"}}
+            <a id="{{id}}-done" href="#" onclick="done({{ id }})" class="card-link btn btn-info">Pending</a>
+            {{/eq}}
+            <a href="#" onclick="remove({{ id }})" class="card-link btn btn-warning">Delete</a>
+          </p>
+        </div>
+      </div>
+      {{/each}}
+    </div>
+  </div>
+</main>
