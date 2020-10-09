@@ -4,24 +4,18 @@ import Form from "react-bootstrap/Form";
 import InputGroup from "react-bootstrap/InputGroup";
 import axios from "axios";
 
-const AddTodo = () => {
+const AddTodo = ({ getTodoList }) => {
   const [task, setTask] = useState([{ description: "" }]);
 
-  const addTask = (event) => {
+  const addTask = async (event) => {
     event.preventDefault();
-    //alert("You are submitting " + task.description);
-    axios
-      .post("http://localhost:3100/tasks", task)
-      .then(function (response) {
-        console.log(response);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    await axios.post("http://localhost:4000/tasks", task);
+    getTodoList();
+    document.getElementById("taskText").value = "";
   };
 
-  const taskDescription = (event) => {
-    setTask({ description: event.target.value });
+  const taskDescription = (e) => {
+    setTask({ description: e.target.value });
   };
 
   return (
@@ -32,6 +26,7 @@ const AddTodo = () => {
             <Form.Control
               type="task"
               onChange={taskDescription}
+              id="taskText"
               placeholder="I have to..."
             />
             <InputGroup.Append>

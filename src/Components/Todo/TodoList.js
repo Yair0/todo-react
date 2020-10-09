@@ -1,23 +1,19 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Button from "react-bootstrap/Button";
 import Card from "react-bootstrap/Card";
 import { Link } from "react-router-dom";
 import axios from "axios";
 
-const TodoList = () => {
-  const [todo, setTodo] = useState([{ id: 1, description: "", status: "" }]);
-
-  useEffect(() => {
-    axios("http://localhost:3100")
-      .then((result) => {
-        setTodo(result.data);
-      })
-      .catch((error) => {
-        console.log("There was an error: ", error);
-      });
-  }, []);
+const TodoList = ({ todo, getTodoList }) => {
   const Cap = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1);
+  };
+
+  const deleteTask = async (id, e) => {
+    e.preventDefault();
+    console.log(id);
+    await axios.delete(`http://localhost:4000/tasks/${id}`);
+    getTodoList();
   };
 
   return (
@@ -32,11 +28,15 @@ const TodoList = () => {
                     <h3>{todo.description}</h3>
                   </Card.Title>
                   <Card.Text>
-                    <Link>
-                      <Button variant="warning">{Cap(todo.status)}</Button>{" "}
-                    </Link>
-                    <Link>
-                      <Button variant="danger">Delete</Button>{" "}
+                    <Button variant="warning">{Cap(todo.status)}</Button>{" "}
+                    <Button
+                      variant="danger"
+                      onClick={(e) => deleteTask(todo.id, e)}
+                    >
+                      Delete
+                    </Button>{" "}
+                    <Link to={`/${todo.id}`}>
+                      <Button variant="info">Info</Button>{" "}
                     </Link>
                   </Card.Text>
                 </Card.Body>
@@ -50,17 +50,3 @@ const TodoList = () => {
 };
 
 export default TodoList;
-
-/*
-        <ul>
-          {pokemon.map((pokemon, i) => {
-            return (
-              <>
-                <Link to={`/pokemon/${i + 1}`}>
-                  <li key={i}>{pokemon.name}</li>
-                </Link>
-              </>
-            );
-          })}
-        </ul>
-        */
