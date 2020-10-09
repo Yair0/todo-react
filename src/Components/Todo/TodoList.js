@@ -5,47 +5,52 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const TodoList = ({ todo, getTodoList }) => {
-  const Cap = (str) => {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  };
-
   const deleteTask = async (id, e) => {
     e.preventDefault();
     console.log(id);
     await axios.delete(`http://localhost:4000/tasks/${id}`);
-    getTodoList();
+    await getTodoList();
+  };
+
+  const doneTask = async (id, e) => {
+    e.preventDefault();
+    console.log(id);
+    await axios.put(`http://localhost:4000/tasks/${id}`);
+    await getTodoList();
   };
 
   return (
-    <>
-      <div>
-        {todo.map((todo, i) => {
-          return (
-            <>
-              <Card key={i}>
-                <Card.Body>
-                  <Card.Title>
-                    <h3>{todo.description}</h3>
-                  </Card.Title>
-                  <Card.Text>
-                    <Button variant="warning">{Cap(todo.status)}</Button>{" "}
-                    <Button
-                      variant="danger"
-                      onClick={(e) => deleteTask(todo.id, e)}
-                    >
-                      Delete
-                    </Button>{" "}
-                    <Link to={`/${todo.id}`}>
-                      <Button variant="info">Info</Button>{" "}
-                    </Link>
-                  </Card.Text>
-                </Card.Body>
-              </Card>
-            </>
-          );
-        })}
-      </div>
-    </>
+    <div>
+      {todo.map((todo, i) => {
+        return (
+          <Card key={i} bg={todo.status === "done" ? "dark" : "light"}>
+            <Card.Body>
+              <Card.Title>
+                <h2>Task: {todo.description}</h2>
+              </Card.Title>
+              <Card.Text>
+                <Button
+                  variant="warning"
+                  onClick={(e) => doneTask(todo.id, e)}
+                  disabled={todo.status === "done" ? true : false}
+                >
+                  Done
+                </Button>{" "}
+                <Button
+                  variant="danger"
+                  onClick={(e) => deleteTask(todo.id, e)}
+                >
+                  Delete
+                </Button>{" "}
+                <Link to={`/${todo.id}`}>
+                  <Button variant="info">Info</Button>{" "}
+                </Link>
+              </Card.Text>
+            </Card.Body>
+          </Card>
+        );
+      })}
+    </div>
   );
 };
 

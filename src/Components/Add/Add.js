@@ -21,7 +21,7 @@ const AddTodo = ({ getTodoList }) => {
   return (
     <>
       <Form onSubmit={addTask}>
-        <Form.Group controlId="addTask">
+        <Form.Group>
           <InputGroup>
             <Form.Control
               type="task"
